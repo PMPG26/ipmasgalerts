@@ -6,7 +6,7 @@ import requests
 
 # Page setup
 st.set_page_config(page_title='IPMA Weather Alerts')
-st.title('IPMA Weather Alerts Explorer')
+st.title('Weather Alerts Explorer')
 
 with st.expander('Sobre esta app'):
   st.markdown('**O que esta app consegue fazer?**')
