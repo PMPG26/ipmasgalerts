@@ -2,49 +2,68 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import altair as alt
+import requests
 
-# Page title
-st.set_page_config(page_title='Interactive Data Explorer', page_icon='📊')
-st.title('📊 Interactive Data Explorer')
+# Page setup
+st.set_page_config(page_title='IPMA Weather Alerts')
+st.title('IPMA Weather Alerts Explorer')
 
-with st.expander('About this app'):
-  st.markdown('**What can this app do?**')
-  st.info('This app shows the use of Pandas for data wrangling, Altair for chart creation and editable dataframe for data interaction.')
-  st.markdown('**How to use the app?**')
-  st.warning('To engage with the app, 1. Select genres of your interest in the drop-down selection box and then 2. Select the year duration from the slider widget. As a result, this should generate an updated editable DataFrame and line plot.')
+with st.expander('Sobre esta app'):
+  st.markdown('**O que esta app consegue fazer?**')
+  st.info('Esta app permite ver os Avisos Meteorológicos através da API do IPMA - https://api.ipma.pt/ - , com previsão até 3 dias.')
+  st.markdown('**Como utilizar esta app?**')
+  st.warning('Deverá seleccionar o Aviso Meteorológico que pretende consultar, e automaticamente será elaborado o gráfico de Aviso e Tendência.')
   
-st.subheader('Which Movie Genre performs ($) best at the box office?')
+# API data load
+url = 'https://api.ipma.pt/open-data/forecast/warnings/warnings_www.json'
+response = requests.get(url)
+data = response.json()
 
-# Load data
-df = pd.read_csv('data/movies_genres_summary.csv')
-df.year = df.year.astype('int')
+df = pd.DataFrame(data)
 
-# Input widgets
-## Genres selection
-genres_list = df.genre.unique()
-genres_selection = st.multiselect('Select genres', genres_list, ['Action', 'Adventure', 'Biography', 'Comedy', 'Drama', 'Horror'])
+# Widgets
+awareness_types = st.multiselect('Awareness Types', df['awarenessTypeName'].unique())
+awareness_levels = st.multiselect('Awareness Levels', df['awarenessLevelID'].unique())
 
-## Year selection
-year_list = df.year.unique()
-year_selection = st.slider('Select year duration', 1986, 2006, (2000, 2016))
-year_selection_list = list(np.arange(year_selection[0], year_selection[1]+1))
+# Filter data
+df_filtered = df[df['awarenessTypeName'].isin(awareness_types) &
+                df['awarenessLevelID'].isin(awareness_levels)]
 
-df_selection = df[df.genre.isin(genres_selection) & df['year'].isin(year_selection_list)]
-reshaped_df = df_selection.pivot_table(index='year', columns='genre', values='gross', aggfunc='sum', fill_value=0)
-reshaped_df = reshaped_df.sort_values(by='year', ascending=False)
+# Display dataframe 
+st.dataframe(df_filtered)
 
-
-# Display DataFrame
-
-df_editor = st.data_editor(reshaped_df, height=212, use_container_width=True,
-                            column_config={"year": st.column_config.TextColumn("Year")},
-                            num_rows="dynamic")
-df_chart = pd.melt(df_editor.reset_index(), id_vars='year', var_name='genre', value_name='gross')
+# Create chart data
+chart_data = df_filtered.groupby(['awarenessTypeName','startTime']).count().reset_index() 
 
 # Display chart
-chart = alt.Chart(df_chart).mark_line().encode(
-            x=alt.X('year:N', title='Year'),
-            y=alt.Y('gross:Q', title='Gross earnings ($)'),
-            color='genre:N'
-            ).properties(height=320)
-st.altair_chart(chart, use_container_width=True)
+chart = alt.Chart(chart_data).mark_area().encode(
+    x='startTime',
+    y='idAreaAviso',
+    color='awarenessTypeName'
+)
+
+# Time series chart
+time_chart = alt.Chart(df.groupby('startTime').count().reset_index()).mark_line().encode(
+    x='startTime',
+    y='idAreaAviso'
+)
+
+# Pie chart   
+pie_chart = alt.Chart(df['awarenessLevelID'].value_counts().reset_index()).mark_arc().encode(
+    theta=alt.Theta(field='idAreaAviso', type='quantitative'),
+    color='awarenessLevelID:N'
+)
+
+# Create subplots
+charts = alt.vconcat(
+    time_chart.properties(title='Alerts Over Time'),
+    pie_chart.properties(title='Alerts by Level')
+).configure_view(
+    strokeWidth=0
+)
+
+st.markdown("## Série Temporal por Tipologia de Aviso")
+st.altair_chart(chart)
+
+st.markdown("## Serie Temporal do Total de Avisos Meteorológicos")
+st.altair_chart(time_chart)
