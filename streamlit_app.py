@@ -73,17 +73,17 @@ st.markdown("## Total de Avisos Meteorológicos")
 st.altair_chart(time_chart)
 
 # Create empty dataframe
-weather_df = pd.DataFrame(columns=['Time', 'Location', 'Observation', 'Occurrence']) 
+weather_df = pd.DataFrame(columns=['Hora', 'Local', 'Observações', 'Ocorrência']) 
 
 # Form
 with st.form('weather_form'):
 
     st.header('Formulário de Observações')
 
-    time = st.text_input('Time')
-    location = st.text_input('Location')
-    observation = st.text_input('Observation')
-    occurrence = st.selectbox('Occurrence Type', ['Neve', 'Agitação Marítima', 'Nevoeiro', 'Tempo Quente', 'Tempo Frio', 'Precipitação', 'Trovoada', 'Vento'])
+    Hora = st.text_input('Hora')
+    Local = st.text_input('Local')
+    Observações = st.text_input('Observações')
+    Ocorrência = st.selectbox('Ocorrência', ['Neve', 'Agitação Marítima', 'Nevoeiro', 'Tempo Quente', 'Tempo Frio', 'Precipitação', 'Trovoada', 'Vento'])
     
     submitted = st.form_submit_button('Submit')
     
