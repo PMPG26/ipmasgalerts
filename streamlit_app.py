@@ -92,10 +92,10 @@ if submitted:
 
     # Append data to dataframe 
     weather_df = weather_df.append({
-        'Time': time,
-        'Location': location,
-        'Observation': observation,
-        'Occurrence': occurrence
+        'Hora': Hora,
+        'Local': Local,
+        'Observações': Observações,
+        'Ocorrência': Ocorrência
     }, ignore_index=True)
     
     # Success message
