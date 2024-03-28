@@ -62,8 +62,8 @@ charts = alt.vconcat(
     strokeWidth=0
 )
 
-st.markdown("## Série Temporal por Tipologia de Aviso")
+st.markdown("## Tipologia de Aviso")
 st.altair_chart(chart)
 
-st.markdown("## Serie Temporal do Total de Avisos Meteorológicos")
+st.markdown("## Total de Avisos Meteorológicos")
 st.altair_chart(time_chart)
