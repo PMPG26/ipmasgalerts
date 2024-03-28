@@ -78,7 +78,7 @@ weather_df = pd.DataFrame(columns=['Time', 'Location', 'Observation', 'Occurrenc
 # Form
 with st.form('weather_form'):
 
-    st.header('Weather Observation Form')
+    st.header('Formulário de Observações')
 
     time = st.text_input('Time')
     location = st.text_input('Location')
