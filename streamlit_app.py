@@ -13,6 +13,8 @@ with st.expander('Sobre esta app'):
   st.info('Esta app permite ver os Avisos Meteorológicos através da API do IPMA - https://api.ipma.pt/ - , com previsão até 3 dias.')
   st.markdown('**Como utilizar esta app?**')
   st.warning('Deverá seleccionar o Aviso Meteorológico que pretende consultar, e automaticamente será elaborado o gráfico de Aviso e Tendência.')
+  st.markdown('**Elaboração da app**')
+  st.warning('A aplicação foi desenvolvida por Pedro Gomes e Tiago Cardoso, da Secretaria Geral do Ambiente, utilizando o assistente virtual Cody na elaboração, debugging e simplificação do código, utilizando igualmente a API do IPMA numa lógica de utilização de dados abertos de fontes oficiais.')
   
 # API data load
 url = 'https://api.ipma.pt/open-data/forecast/warnings/warnings_www.json'
