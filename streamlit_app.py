@@ -69,20 +69,3 @@ st.altair_chart(chart)
 
 st.markdown("## Total de Avisos Meteorológicos")
 st.altair_chart(time_chart)
-
-# Image upload form
-with st.form(key='image_form'):
-    time = st.text_input("Time")
-    location = st.text_input("Location")
-
-    image = st.file_uploader("Upload Image", type=['png','jpg'])
-    submit = st.form_submit_button(label='Submit')
-
-# Process image
-if submit:
-   # Save image logic
-   # Display confirmation
-
-# Display uploaded images
-st.header("Uploaded Images")
-# Loop through saved images and display
