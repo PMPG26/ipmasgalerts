@@ -81,7 +81,7 @@ with st.form('weather_form'):
     time = st.text_input('Time')
     location = st.text_input('Location')
     observation = st.text_input('Observation')
-    occurrence = st.selectbox('Occurrence Type', ['Rain', 'Snow', 'Wind', 'Other'])
+    occurrence = st.selectbox('Occurrence Type', ['Neve', 'Agitação Marítima', 'Nevoeiro', 'Tempo Quente', 'Tempo Frio', 'Precipitação', 'Trovoada', 'Vento'])
     
     submitted = st.form_submit_button('Submit')
     
